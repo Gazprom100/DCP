@@ -41,8 +41,8 @@ bot.hears('Помощь', (ctx) => {
 // Обработчик веб-данных (когда пользователь отправляет данные из веб-приложения)
 bot.on('web_app_data', (ctx) => {
   try {
-    // Получение данных от веб-приложения
-    const data = JSON.parse(ctx.webAppData.data);
+    // Проверка типа данных перед парсингом
+    const data = typeof ctx.webAppData.data === 'string' ? JSON.parse(ctx.webAppData.data) : ctx.webAppData.data;
     
     // Обработка данных в зависимости от типа
     if (data.type === 'paymentRequest') {
