@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // Telegram bot configuration
-const TELEGRAM_BOT_TOKEN = '8006930667:AAHHpNFS3ySj8hzteC-mmg0YBtHnSf8jREs';
+const TELEGRAM_BOT_TOKEN = '8125435311:AAF418vsyh49i1aREKb2Raxh5P29dFraRIg';
 const CHAT_ID = '297810833';
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 

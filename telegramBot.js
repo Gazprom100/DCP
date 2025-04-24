@@ -3,7 +3,7 @@ const express = require('express');
 const axios = require('axios');
 
 // Конфигурация бота Telegram
-const BOT_TOKEN = '8006930667:AAHHpNFS3ySj8hzteC-mmg0YBtHnSf8jREs';
+const BOT_TOKEN = '8125435311:AAF418vsyh49i1aREKb2Raxh5P29dFraRIg';
 const WEBSITE_URL = process.env.WEBSITE_URL || 'https://dcp-wk3n.onrender.com'; // URL вашего приложения на Render
 
 // Инициализация бота
