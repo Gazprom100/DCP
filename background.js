@@ -15,15 +15,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Config
     const config = {
-        particleCount: 200,
+        particleCount: 250,
         connectionDistance: 150,
         particleSize: 2,
-        particleSpeed: 0.2,
+        particleSpeed: 0.3,
         baseColor: '#00ff41',
-        blurSize: 20,
-        blurCount: 3,
-        hexagonsCount: 15,
-        linesCount: 8
+        blurSize: 30,
+        blurCount: 5,
+        hexagonsCount: 20,
+        linesCount: 12,
+        dataNodesCount: 8
     };
     
     // Create particles
@@ -39,7 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 speedY: (Math.random() - 0.5) * config.particleSpeed,
                 size: Math.random() * 2 + config.particleSize,
                 alpha: Math.random() * 0.5 + 0.1,
-                connected: false
+                connected: false,
+                pulseSpeed: Math.random() * 0.005 + 0.002,
+                pulseOffset: Math.random() * Math.PI * 2
             });
         }
     }
@@ -59,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 speed: Math.random() * 0.001 + 0.0005,
                 alpha: Math.random() * 0.1 + 0.02,
                 pulseSpeed: Math.random() * 0.005 + 0.001,
-                pulseOffset: Math.random() * Math.PI * 2
+                pulseOffset: Math.random() * Math.PI * 2,
+                glowIntensity: Math.random() * 0.4 + 0.2
             });
         }
     }
@@ -79,7 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 width: Math.random() * 1 + 0.5,
                 speed: Math.random() * 1 + 0.5,
                 moveX: (Math.random() - 0.5) * 0.5,
-                moveY: (Math.random() - 0.5) * 0.5
+                moveY: (Math.random() - 0.5) * 0.5,
+                dataPoints: Math.floor(Math.random() * 5) + 3,
+                pulseAlpha: Math.random() * 0.01 + 0.005
             });
         }
     }
@@ -93,10 +99,33 @@ document.addEventListener('DOMContentLoaded', () => {
             blurCircles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                size: Math.random() * 100 + config.blurSize,
+                size: Math.random() * 120 + config.blurSize,
                 alpha: Math.random() * 0.2 + 0.05,
                 speedX: (Math.random() - 0.5) * 0.3,
-                speedY: (Math.random() - 0.5) * 0.3
+                speedY: (Math.random() - 0.5) * 0.3,
+                pulseSpeed: Math.random() * 0.002 + 0.001,
+                pulseOffset: Math.random() * Math.PI * 2
+            });
+        }
+    }
+    
+    // Create data nodes
+    let dataNodes = [];
+    
+    function createDataNodes() {
+        dataNodes = [];
+        for (let i = 0; i < config.dataNodesCount; i++) {
+            dataNodes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 20 + 10,
+                alpha: Math.random() * 0.3 + 0.1,
+                speedX: (Math.random() - 0.5) * 0.2,
+                speedY: (Math.random() - 0.5) * 0.2,
+                dataType: Math.random() > 0.5 ? 'binary' : 'hex',
+                pulseSpeed: Math.random() * 0.01 + 0.005,
+                pulseOffset: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.002
             });
         }
     }
@@ -106,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createHexagons();
     createTechLines();
     createBlurCircles();
+    createDataNodes();
     
     // Animation loop
     function animate() {
@@ -113,16 +143,29 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillStyle = '#040b18';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Draw blurred circles first for glow effect
+        // Add vignette effect
+        const gradient = ctx.createRadialGradient(
+            canvas.width / 2, canvas.height / 2, 0,
+            canvas.width / 2, canvas.height / 2, canvas.width * 0.7
+        );
+        gradient.addColorStop(0, 'rgba(4, 11, 24, 0)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw blurred circles for glow effect
         for (let i = 0; i < blurCircles.length; i++) {
             const circle = blurCircles[i];
             
-            ctx.globalAlpha = circle.alpha;
+            // Pulsing alpha
+            circle.currentAlpha = circle.alpha * (0.7 + 0.3 * Math.sin(Date.now() * circle.pulseSpeed + circle.pulseOffset));
+            
+            ctx.globalAlpha = circle.currentAlpha;
             const gradient = ctx.createRadialGradient(
                 circle.x, circle.y, 0,
                 circle.x, circle.y, circle.size
             );
-            gradient.addColorStop(0, 'rgba(0, 255, 65, 0.2)');
+            gradient.addColorStop(0, 'rgba(0, 255, 65, 0.25)');
             gradient.addColorStop(1, 'rgba(0, 255, 65, 0)');
             
             ctx.fillStyle = gradient;
@@ -159,6 +202,74 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.stroke();
         }
         
+        // Draw particles and connections
+        ctx.globalAlpha = 1;
+        
+        // Draw connections first
+        ctx.strokeStyle = config.baseColor;
+        ctx.lineWidth = 0.3;
+        
+        for (let i = 0; i < particles.length; i++) {
+            const p1 = particles[i];
+            
+            for (let j = i + 1; j < particles.length; j++) {
+                const p2 = particles[j];
+                const dx = p1.x - p2.x;
+                const dy = p1.y - p2.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < config.connectionDistance) {
+                    ctx.globalAlpha = (1 - distance / config.connectionDistance) * 0.15;
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                    
+                    // Mark particles as connected
+                    p1.connected = true;
+                    p2.connected = true;
+                }
+            }
+        }
+        
+        // Draw particles
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            
+            // Pulsing size for connected particles
+            const pulseAmount = p.connected ? Math.sin(Date.now() * p.pulseSpeed + p.pulseOffset) * 0.5 + 1 : 1;
+            const finalSize = p.size * pulseAmount;
+            
+            ctx.globalAlpha = p.alpha * (p.connected ? 1.2 : 0.7);
+            ctx.fillStyle = config.baseColor;
+            
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, finalSize, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Reset connection status for next frame
+            p.connected = false;
+            
+            // Move particles
+            p.x += p.speedX;
+            p.y += p.speedY;
+            
+            // Bounce off edges with slight randomness
+            if (p.x < 0 || p.x > canvas.width) {
+                p.speedX *= -1;
+                p.speedX += (Math.random() - 0.5) * 0.1;
+            }
+            if (p.y < 0 || p.y > canvas.height) {
+                p.speedY *= -1;
+                p.speedY += (Math.random() - 0.5) * 0.1;
+            }
+            
+            // Keep particle speed in check
+            const maxSpeed = config.particleSpeed * 1.5;
+            if (Math.abs(p.speedX) > maxSpeed) p.speedX = Math.sign(p.speedX) * maxSpeed;
+            if (Math.abs(p.speedY) > maxSpeed) p.speedY = Math.sign(p.speedY) * maxSpeed;
+        }
+        
         // Draw hexagons
         for (let i = 0; i < hexagons.length; i++) {
             const hex = hexagons[i];
@@ -166,11 +277,34 @@ document.addEventListener('DOMContentLoaded', () => {
             // Pulse effect for alpha
             hex.alpha = (Math.sin(Date.now() * hex.pulseSpeed + hex.pulseOffset) * 0.05) + 0.08;
             
+            // Draw glow
+            const glowSize = hex.size * 1.1;
+            ctx.globalAlpha = hex.alpha * hex.glowIntensity;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = 'rgba(0, 255, 65, 0.3)';
+            
+            // Draw hexagon
+            ctx.beginPath();
+            for (let j = 0; j < 6; j++) {
+                const angle = (j * Math.PI / 3) + hex.rotation;
+                const x = hex.x + glowSize * Math.cos(angle);
+                const y = hex.y + glowSize * Math.sin(angle);
+                
+                if (j === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.closePath();
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
+            // Draw actual hexagon
             ctx.globalAlpha = hex.alpha;
             ctx.strokeStyle = config.baseColor;
             ctx.lineWidth = 1;
             
-            // Draw hexagon
             ctx.beginPath();
             for (let j = 0; j < 6; j++) {
                 const angle = (j * Math.PI / 3) + hex.rotation;
@@ -203,16 +337,82 @@ document.addEventListener('DOMContentLoaded', () => {
             hex.rotation += hex.speed;
         }
         
+        // Draw data nodes
+        for (let i = 0; i < dataNodes.length; i++) {
+            const node = dataNodes[i];
+            
+            // Pulsing effect
+            node.currentAlpha = node.alpha * (0.7 + 0.3 * Math.sin(Date.now() * node.pulseSpeed + node.pulseOffset));
+            
+            // Draw node glow
+            ctx.globalAlpha = node.currentAlpha * 0.5;
+            const gradient = ctx.createRadialGradient(
+                node.x, node.y, 0,
+                node.x, node.y, node.size * 1.5
+            );
+            gradient.addColorStop(0, 'rgba(0, 255, 65, 0.3)');
+            gradient.addColorStop(1, 'rgba(0, 255, 65, 0)');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.size * 1.5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw node circle
+            ctx.globalAlpha = node.currentAlpha;
+            ctx.fillStyle = 'rgba(0, 20, 40, 0.8)';
+            ctx.strokeStyle = config.baseColor;
+            ctx.lineWidth = 1;
+            
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw data inside node
+            ctx.fillStyle = config.baseColor;
+            ctx.font = '9px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            if (node.dataType === 'binary') {
+                // Binary data
+                for (let j = 0; j < 3; j++) {
+                    const text = Math.random() > 0.5 ? '0' : '1';
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * node.size * 0.6;
+                    const x = node.x + Math.cos(angle) * distance;
+                    const y = node.y + Math.sin(angle) * distance;
+                    ctx.fillText(text, x, y);
+                }
+            } else {
+                // Hex data
+                const text = Math.floor(Math.random() * 16).toString(16).toUpperCase();
+                ctx.fillText(text, node.x, node.y);
+            }
+            
+            // Move nodes
+            node.x += node.speedX;
+            node.y += node.speedY;
+            
+            // Bounce off edges
+            if (node.x < node.size || node.x > canvas.width - node.size) node.speedX *= -1;
+            if (node.y < node.size || node.y > canvas.height - node.size) node.speedY *= -1;
+        }
+        
         // Draw tech lines
         for (let i = 0; i < techLines.length; i++) {
             const line = techLines[i];
             
-            ctx.globalAlpha = line.alpha;
+            // Pulsing alpha
+            line.currentAlpha = line.alpha * (0.7 + 0.3 * Math.sin(Date.now() * line.pulseAlpha));
+            
+            ctx.globalAlpha = line.currentAlpha;
             ctx.strokeStyle = config.baseColor;
             ctx.lineWidth = line.width;
             
             // Data points on lines
-            const pointsCount = Math.floor(Math.random() * 3) + 2;
+            const pointsCount = line.dataPoints;
             const points = [];
             
             // Create points along the line
@@ -240,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Draw small data segments around points
                     if (Math.random() > 0.7) {
-                        ctx.globalAlpha = line.alpha * 0.7;
+                        ctx.globalAlpha = line.currentAlpha * 0.7;
                         ctx.font = '8px monospace';
                         const text = Math.random() > 0.5 ? '01' : '10';
                         ctx.fillText(text, points[j].x + 10, points[j].y - 5);
@@ -254,102 +454,16 @@ document.addEventListener('DOMContentLoaded', () => {
             line.x2 += line.moveX;
             line.y2 += line.moveY;
             
-            // Reset lines that go off screen
-            if (line.x1 < -200 || line.x1 > canvas.width + 200 || 
-                line.y1 < -200 || line.y1 > canvas.height + 200) {
-                if (Math.random() > 0.5) {
-                    line.x1 = Math.random() * canvas.width;
-                    line.y1 = Math.random() > 0.5 ? -100 : canvas.height + 100;
-                } else {
-                    line.x1 = Math.random() > 0.5 ? -100 : canvas.width + 100;
-                    line.y1 = Math.random() * canvas.height;
-                }
-                
-                if (Math.random() > 0.5) {
-                    line.x2 = Math.random() * canvas.width;
-                    line.y2 = Math.random() > 0.5 ? -100 : canvas.height + 100;
-                } else {
-                    line.x2 = Math.random() > 0.5 ? -100 : canvas.width + 100;
-                    line.y2 = Math.random() * canvas.height;
-                }
+            // Bounce off edges
+            if (line.x1 < 0 || line.x1 > canvas.width || line.x2 < 0 || line.x2 > canvas.width) {
+                line.moveX *= -1;
+            }
+            if (line.y1 < 0 || line.y1 > canvas.height || line.y2 < 0 || line.y2 > canvas.height) {
+                line.moveY *= -1;
             }
         }
         
-        // Draw particles and their connections
-        ctx.globalAlpha = 1;
-        for (let i = 0; i < particles.length; i++) {
-            const p = particles[i];
-            p.connected = false;
-            
-            // Move particles
-            p.x += p.speedX;
-            p.y += p.speedY;
-            
-            // Wrap around edges
-            if (p.x < 0) p.x = canvas.width;
-            if (p.x > canvas.width) p.x = 0;
-            if (p.y < 0) p.y = canvas.height;
-            if (p.y > canvas.height) p.y = 0;
-        }
-        
-        // Draw connections first (to be behind particles)
-        ctx.globalAlpha = 0.2;
-        ctx.strokeStyle = config.baseColor;
-        ctx.lineWidth = 0.5;
-        
-        for (let i = 0; i < particles.length; i++) {
-            const p1 = particles[i];
-            
-            for (let j = i + 1; j < particles.length; j++) {
-                const p2 = particles[j];
-                const dx = p1.x - p2.x;
-                const dy = p1.y - p2.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < config.connectionDistance) {
-                    ctx.globalAlpha = 0.2 * (1 - distance / config.connectionDistance);
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                    
-                    p1.connected = true;
-                    p2.connected = true;
-                }
-            }
-        }
-        
-        // Draw particles
-        for (let i = 0; i < particles.length; i++) {
-            const p = particles[i];
-            
-            ctx.globalAlpha = p.connected ? p.alpha * 1.5 : p.alpha;
-            ctx.fillStyle = config.baseColor;
-            
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        
-        // Add scanline effect
-        const scanY = (Date.now() % 10000) / 10000 * canvas.height;
-        ctx.globalAlpha = 0.1;
-        ctx.fillStyle = config.baseColor;
-        ctx.fillRect(0, scanY, canvas.width, 2);
-        
-        // Add subtle vignette effect
-        const gradient = ctx.createRadialGradient(
-            canvas.width / 2, canvas.height / 2, 0,
-            canvas.width / 2, canvas.height / 2, canvas.width
-        );
-        gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0.3)');
-        
-        ctx.globalAlpha = 0.8;
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Continue animation
+        // Loop animation
         requestAnimationFrame(animate);
     }
     

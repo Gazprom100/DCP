@@ -1,6 +1,7 @@
 :root {
     --neon-green: #00ff41;
     --neon-green-glow: rgba(0, 255, 65, 0.6);
+    --neon-green-faint: rgba(0, 255, 65, 0.1);
     --neon-purple: #b36fff;
     --neon-purple-glow: rgba(179, 111, 255, 0.6);
     --background: #050a18;
@@ -21,6 +22,15 @@ body {
     overflow: hidden;
     height: 100vh;
     width: 100vw;
+    background: linear-gradient(45deg, #040b18, #081530, #061025, #030b1c);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
 }
 
 /* Canvas background */
@@ -31,6 +41,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 0;
+    filter: contrast(1.05) brightness(1.1);
 }
 
 .container {
@@ -45,8 +56,8 @@ body {
 
 .wrapper {
     position: relative;
-    width: 420px;
-    padding: 40px;
+    width: 380px;
+    padding: 35px 30px;
     background: rgba(16, 20, 40, 0.5);
     border-radius: 16px;
     backdrop-filter: blur(10px);
@@ -63,6 +74,10 @@ body {
         border-color: rgba(0, 255, 65, 0.1);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 65, 0.1);
     }
+    50% {
+        border-color: rgba(0, 255, 65, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 65, 0.2);
+    }
     100% {
         border-color: rgba(0, 255, 65, 0.3);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 255, 65, 0.3);
@@ -70,7 +85,7 @@ body {
 }
 
 .wrapper:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 255, 65, 0.4);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 35px rgba(0, 255, 65, 0.5);
 }
 
 .glow-background {
@@ -80,11 +95,42 @@ body {
     transform: translate(-50%, -50%);
     width: 150px;
     height: 150px;
-    background: var(--neon-green-glow);
-    filter: blur(80px);
+    background: radial-gradient(circle, var(--neon-green-glow) 0%, rgba(0, 255, 65, 0) 70%);
+    filter: blur(40px);
     z-index: -1;
     opacity: 0.8;
-    animation: pulse 5s infinite alternate;
+    animation: glowPulse 5s infinite alternate;
+}
+
+.glow-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, rgba(0, 255, 65, 0.4) 0%, rgba(0, 255, 65, 0) 60%);
+    filter: blur(30px);
+    opacity: 0.6;
+    animation: glowPulse 4s infinite alternate-reverse;
+}
+
+@keyframes glowPulse {
+    0% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        filter: blur(40px) hue-rotate(0deg);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1.2) rotate(5deg);
+        filter: blur(45px) hue-rotate(5deg);
+    }
+    100% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.4) rotate(0deg);
+        filter: blur(50px) hue-rotate(0deg);
+    }
 }
 
 .content {
@@ -94,10 +140,10 @@ body {
 }
 
 .title {
-    font-size: 3.5rem;
+    font-size: 3.2rem;
     font-weight: 700;
     letter-spacing: 2px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(0, 255, 65, 0.3);
     animation: titleGlow 3s infinite alternate;
 }
@@ -117,13 +163,13 @@ body {
 }
 
 .description {
-    font-size: 1.1rem;
+    font-size: 1rem;
     opacity: 0.8;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .amount-container {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .amount-input-wrapper {
@@ -133,10 +179,10 @@ body {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    padding: 8px 16px;
+    padding: 8px 12px;
     position: relative;
     transition: all 0.3s ease;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     width: 100%;
 }
 
@@ -176,21 +222,21 @@ body {
 .amount-presets {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
+    gap: 8px;
+    margin-top: 10px;
     justify-content: center;
 }
 
 .amount-preset {
-    padding: 8px 15px;
+    padding: 6px 12px;
     background: rgba(16, 20, 40, 0.5);
     border: 1px solid var(--neon-green);
     border-radius: 8px;
     color: var(--text-color);
-    font-size: 16px;
+    font-size: 15px;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-width: 60px;
+    min-width: 55px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -245,13 +291,13 @@ body {
 
 /* Payment methods */
 .payment-methods {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .payment-method-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     opacity: 0.8;
     text-align: center;
 }
@@ -259,14 +305,14 @@ body {
 .payment-method-options {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
 }
 
 .payment-option {
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 8px 16px;
+    padding: 7px 14px;
     border-radius: 20px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -341,15 +387,16 @@ body {
     background: transparent;
     border: 2px solid var(--neon-green);
     color: var(--neon-green);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    padding: 12px 40px;
+    padding: 10px 30px;
     border-radius: 30px;
     cursor: pointer;
     letter-spacing: 1px;
     overflow: hidden;
     transition: all 0.3s ease;
     outline: none;
+    margin-top: 5px;
 }
 
 .donate-btn .btn-text {
@@ -394,9 +441,9 @@ body {
 }
 
 .status-message {
-    margin-top: 20px;
-    min-height: 24px;
-    font-size: 1rem;
+    margin-top: 15px;
+    min-height: 20px;
+    font-size: 0.9rem;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -414,21 +461,43 @@ body {
 }
 
 .particles {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    pointer-events: none;
     z-index: 1;
+    overflow: hidden;
 }
 
-.particle {
+.particles::before {
+    content: '';
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 255, 65, 0.03) 0%, transparent 60%),
+        radial-gradient(circle at 90% 80%, rgba(0, 255, 65, 0.03) 0%, transparent 60%),
+        radial-gradient(circle at 50% 50%, rgba(0, 255, 65, 0.01) 0%, transparent 70%);
+    pointer-events: none;
+    opacity: 0.7;
+    animation: particlesFade 10s infinite alternate;
+}
+
+@keyframes particlesFade {
+    0% {
+        opacity: 0.5;
+        background-position: 0% 0%, 100% 100%, 50% 50%;
+    }
+    50% {
+        opacity: 0.7;
+        background-position: 5% 5%, 95% 95%, 45% 55%;
+    }
+    100% {
+        opacity: 0.9;
+        background-position: 10% 10%, 90% 90%, 55% 45%;
+    }
 }
 
 /* Animation keyframes */
@@ -446,38 +515,90 @@ body {
 /* Responsive adjustments */
 @media (max-width: 500px) {
     .wrapper {
-        width: 90%;
-        padding: 30px 20px;
+        width: 92%;
+        padding: 25px 20px;
     }
     
     .title {
-        font-size: 2.8rem;
+        font-size: 2.6rem;
+        margin-bottom: 10px;
+    }
+    
+    .description {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
     }
     
     .amount-input {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         width: 90px;
     }
     
     .currency {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     
     .amount-presets {
-        flex-direction: row;
-        flex-wrap: wrap;
         gap: 6px;
     }
     
     .amount-preset {
-        font-size: 0.8rem;
-        padding: 6px 10px;
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        min-width: 50px;
+    }
+    
+    .payment-method-options {
+        gap: 10px;
+    }
+    
+    .payment-option {
+        padding: 6px 12px;
+    }
+    
+    .donate-btn {
+        font-size: 1rem;
+        padding: 9px 25px;
+    }
+}
+
+@media (max-width: 380px) {
+    .wrapper {
+        padding: 20px 15px;
+    }
+    
+    .title {
+        font-size: 2.4rem;
+    }
+    
+    .amount-input {
+        font-size: 1.4rem;
+    }
+    
+    .amount-presets {
+        gap: 5px;
+    }
+    
+    .amount-preset {
+        padding: 4px 8px;
+        font-size: 0.85rem;
+        min-width: 45px;
     }
     
     .payment-method-options {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
         align-items: center;
+    }
+    
+    .payment-option {
+        width: 90%;
+        justify-content: center;
+    }
+    
+    .donate-btn {
+        font-size: 0.95rem;
+        padding: 8px 20px;
     }
 }
 
