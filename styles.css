@@ -21,6 +21,62 @@ body {
     width: 100vw;
 }
 
+/* Анимированный фон */
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    background-color: #040b1a;
+    overflow: hidden;
+}
+
+.gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(0, 30, 60, 0.4) 0%, rgba(4, 11, 26, 0.95) 70%);
+    z-index: 1;
+}
+
+.matrix-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="100%" height="100%" fill="none"/><text x="50%" y="50%" font-family="monospace" font-size="10" fill="rgba(0, 255, 65, 0.05)" text-anchor="middle">01001010101110001010010101001010101010100101010010010100101</text></svg>') repeat;
+    opacity: 0.1;
+    animation: matrixScroll 30s linear infinite;
+    z-index: 1;
+}
+
+.grid-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 40px 40px;
+    background-image: 
+        linear-gradient(to right, rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+    z-index: 1;
+}
+
+@keyframes matrixScroll {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 1000px;
+    }
+}
+
 .container {
     height: 100vh;
     width: 100vw;
@@ -28,6 +84,7 @@ body {
     justify-content: center;
     align-items: center;
     position: relative;
+    z-index: 10;
 }
 
 .wrapper {
@@ -40,6 +97,12 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 2;
     overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.wrapper:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 255, 65, 0.2);
 }
 
 .glow-background {
@@ -207,6 +270,7 @@ body {
     left: 0;
     background: radial-gradient(circle at center, transparent 0%, var(--background) 70%);
     z-index: 2;
+    display: none;
 }
 
 .particle {
@@ -226,6 +290,26 @@ body {
     100% {
         opacity: 0.8;
         transform: translate(-50%, -50%) scale(1.3);
+    }
+}
+
+/* Добавляем эффект сканирования */
+@keyframes scanline {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+/* Добавляем эффект мерцания */
+@keyframes flicker {
+    0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+        opacity: 0.99;
+    }
+    20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+        opacity: 0.4;
     }
 }
 

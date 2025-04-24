@@ -1,15 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Константы
     const AUTH_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJQdWJsaWNJZCI6IjNhMTk0YmUzLWQ5NjgtZDRkNy0zNTIxLTFlMDZjNGJhYmJlOCIsIlRva2VuVmVyc2lvbiI6IjIiLCJleHAiOjE3NzY4NDk1NTcsImlzcyI6Imh0dHBzOi8vYXBpLndhdGEucHJvIiwiYXVkIjoiaHR0cHM6Ly9hcGkud2F0YS5wcm8vYXBpL2gyaCJ9.zXFcHWbgc1lS6miTjbuZ02_aB81cKd-WS1lsDAuYcEI';
-    const API_URL = 'https://api.wata.pro/api/h2h/links';
+    const API_URL = '/api/proxy/links'; // Используем наш прокси вместо прямого URL
     
     // DOM Элементы
     const donateBtn = document.getElementById('donate-btn');
     const amountInput = document.getElementById('amount');
     const statusMessage = document.getElementById('status-message');
     
-    // Создаем эффект частиц
+    // Создаем эффекты
     createParticles();
+    createTechBackground();
     
     // Обработчики событий
     donateBtn.addEventListener('click', handleDonateClick);
@@ -117,6 +118,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    // Создать технологичный фон
+    function createTechBackground() {
+        const matrixEffect = document.querySelector('.matrix-effect');
+        
+        // Создаем эффект сканирующей линии
+        const scanline = document.createElement('div');
+        scanline.style.position = 'absolute';
+        scanline.style.width = '100%';
+        scanline.style.height = '2px';
+        scanline.style.background = 'rgba(0, 255, 65, 0.2)';
+        scanline.style.boxShadow = '0 0 10px rgba(0, 255, 65, 0.5)';
+        scanline.style.zIndex = '2';
+        scanline.style.animation = 'scanline 4s linear infinite';
+        
+        document.querySelector('.animated-background').appendChild(scanline);
+        
+        // Случайные цифровые элементы
+        for (let i = 0; i < 20; i++) {
+            const digitalElement = document.createElement('div');
+            const size = Math.random() * 60 + 20;
+            const posX = Math.random() * window.innerWidth;
+            const posY = Math.random() * window.innerHeight;
+            const opacity = Math.random() * 0.1 + 0.05;
+            
+            digitalElement.style.position = 'absolute';
+            digitalElement.style.left = posX + 'px';
+            digitalElement.style.top = posY + 'px';
+            digitalElement.style.fontSize = size + 'px';
+            digitalElement.style.fontFamily = 'monospace';
+            digitalElement.style.color = `rgba(0, 255, 65, ${opacity})`;
+            digitalElement.style.zIndex = '1';
+            digitalElement.style.pointerEvents = 'none';
+            
+            const digit = Math.random() > 0.5 ? '0' : '1';
+            digitalElement.textContent = digit;
+            
+            // Добавляем анимацию мерцания
+            digitalElement.style.animation = `flicker ${2 + Math.random() * 3}s infinite`;
+            
+            document.querySelector('.animated-background').appendChild(digitalElement);
+        }
+    }
+    
     // Добавление эффекта парения элементам интерфейса
     function addFloatingEffect() {
         const wrapper = document.querySelector('.wrapper');
@@ -131,4 +175,4 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Инициализация эффекта парения
     addFloatingEffect();
-}); 
+});
