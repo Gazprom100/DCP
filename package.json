@@ -1,0 +1,20 @@
+{
+  "name": "donatx",
+  "version": "1.0.0",
+  "description": "Сайт для пожертвований в стильном дизайне",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -s .",
+    "build": "echo 'Статический сайт, билд не требуется'"
+  },
+  "keywords": [
+    "donation",
+    "payment",
+    "wata"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+} 
