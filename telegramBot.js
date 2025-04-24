@@ -4,7 +4,7 @@ const axios = require('axios');
 
 // Конфигурация бота Telegram
 const BOT_TOKEN = '8006930667:AAHHpNFS3ySj8hzteC-mmg0YBtHnSf8jREs';
-const WEBSITE_URL = process.env.WEBSITE_URL || 'https://your-server-url.com'; // URL вашего сайта/сервера
+const WEBSITE_URL = process.env.WEBSITE_URL || 'https://dcp-wk3n.onrender.com'; // URL вашего приложения на Render
 
 // Инициализация бота
 const bot = new Telegraf(BOT_TOKEN);
