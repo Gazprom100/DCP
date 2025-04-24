@@ -5,6 +5,7 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const telegramService = require('./telegramService');
+const telegramBot = require('./telegramBot');
 
 // Обслуживание статических файлов из текущей директории
 app.use(express.static(__dirname));
@@ -133,4 +134,10 @@ app.get('*', (req, res) => {
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
+  
+  // Запуск Telegram бота
+  telegramBot.startBot();
+  
+  // Вывод URL для настройки вебхука Telegram бота при необходимости
+  console.log(`Для настройки вебхука используйте: https://your-server-url/api/telegram-webhook`);
 }); 

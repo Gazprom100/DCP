@@ -115,6 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Отправляем уведомление в Telegram о созданной заявке на оплату
                 await sendPaymentRequestNotification(amount, paymentMethod);
                 
+                // Генерируем событие для Telegram Web App
+                dispatchPaymentRequestEvent(amount, paymentMethod);
+                
                 const methodText = paymentMethod === 'sbp' ? 'СБП' : 'картой';
                 showStatus(`Ссылка для оплаты через ${methodText} успешно создана!`, 'success');
                 setTimeout(() => {
@@ -197,6 +200,27 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Ошибка при отправке уведомления в Telegram:', error);
         }
+    }
+    
+    // Генерация события о создании заявки на оплату для Telegram Web App
+    function dispatchPaymentRequestEvent(amount, method) {
+        const event = new CustomEvent('payment-request-created', {
+            detail: {
+                amount: amount,
+                method: method
+            }
+        });
+        document.dispatchEvent(event);
+    }
+    
+    // Генерация события об успешной оплате для Telegram Web App
+    function dispatchPaymentSuccessEvent(amount) {
+        const event = new CustomEvent('payment-success', {
+            detail: {
+                amount: amount
+            }
+        });
+        document.dispatchEvent(event);
     }
     
     // Показать сообщение о статусе
