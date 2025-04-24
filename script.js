@@ -112,6 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (paymentLink && paymentLink.url) {
+                // Отправляем уведомление в Telegram о созданной заявке на оплату
+                await sendPaymentRequestNotification(amount, paymentMethod);
+                
                 const methodText = paymentMethod === 'sbp' ? 'СБП' : 'картой';
                 showStatus(`Ссылка для оплаты через ${methodText} успешно создана!`, 'success');
                 setTimeout(() => {
@@ -175,6 +178,24 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Ошибка API (СБП):', error);
             throw error;
+        }
+    }
+    
+    // Отправка уведомления в Telegram о созданной заявке на оплату
+    async function sendPaymentRequestNotification(amount, method) {
+        try {
+            await fetch('/api/telegram/payment-request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    amount: amount,
+                    method: method
+                })
+            });
+        } catch (error) {
+            console.error('Ошибка при отправке уведомления в Telegram:', error);
         }
     }
     

@@ -1,8 +1,10 @@
 const express = require('express');
 const path = require('path');
 const https = require('https');
+const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const telegramService = require('./telegramService');
 
 // Обслуживание статических файлов из текущей директории
 app.use(express.static(__dirname));
@@ -82,6 +84,45 @@ app.post('/api/proxy/sbp', (req, res) => {
   // Отправляем тело запроса
   apiRequest.write(JSON.stringify(req.body));
   apiRequest.end();
+});
+
+// Эндпоинт для отправки уведомления о создании заявки на оплату
+app.post('/api/telegram/payment-request', async (req, res) => {
+  try {
+    const { amount, method } = req.body;
+    
+    await telegramService.sendPaymentRequestNotification({
+      amount,
+      method
+    });
+    
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Ошибка при отправке уведомления в Telegram:', error);
+    res.status(500).json({ error: 'Ошибка при отправке уведомления' });
+  }
+});
+
+// Вебхук для обработки успешных платежей от WATA API
+app.post('/api/payment-callback', async (req, res) => {
+  try {
+    const paymentData = req.body;
+    
+    // Проверка на успешность платежа
+    if (paymentData.status === 'success') {
+      // Отправка уведомления в Telegram о успешном платеже
+      await telegramService.sendPaymentSuccessNotification({
+        amount: paymentData.amount
+      });
+      
+      console.log('Успешный платеж:', paymentData);
+    }
+    
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Ошибка при обработке колбэка платежа:', error);
+    res.status(500).json({ error: 'Ошибка при обработке колбэка' });
+  }
 });
 
 // Маршрут для главной страницы
