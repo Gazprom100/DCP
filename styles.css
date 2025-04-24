@@ -67,8 +67,8 @@ body {
 
 .wrapper {
     position: relative;
-    width: 380px;
-    padding: 25px 30px;
+    width: 320px;
+    padding: 25px 20px;
     background: rgba(16, 20, 40, 0.5);
     border-radius: 16px;
     backdrop-filter: blur(10px);
@@ -192,10 +192,10 @@ body {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 6px 10px;
     position: relative;
     transition: all 0.3s ease;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     width: 100%;
 }
 
@@ -241,15 +241,15 @@ body {
 }
 
 .amount-preset {
-    padding: 6px 12px;
+    padding: 5px 10px;
     background: rgba(16, 20, 40, 0.5);
     border: 1px solid var(--neon-green);
     border-radius: 8px;
     color: var(--text-color);
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-width: 55px;
+    min-width: 50px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -289,50 +289,22 @@ body {
     }
 }
 
-/* Colored amount presets */
-.amount-preset:nth-child(1) {
-    border-color: var(--neon-blue);
-}
-
-.amount-preset:nth-child(1):hover, .amount-preset:nth-child(1).active {
-    background: rgba(0, 179, 255, 0.1);
-    box-shadow: 0 0 15px rgba(0, 179, 255, 0.5);
-}
-
-.amount-preset:nth-child(2) {
-    border-color: var(--neon-purple);
-}
-
-.amount-preset:nth-child(2):hover, .amount-preset:nth-child(2).active {
-    background: rgba(179, 111, 255, 0.1);
-    box-shadow: 0 0 15px rgba(179, 111, 255, 0.5);
-}
-
-.amount-preset:nth-child(3) {
-    border-color: var(--neon-orange);
-}
-
-.amount-preset:nth-child(3):hover, .amount-preset:nth-child(3).active {
-    background: rgba(255, 157, 0, 0.1);
-    box-shadow: 0 0 15px rgba(255, 157, 0, 0.5);
-}
-
-.amount-preset:nth-child(4) {
-    border-color: var(--neon-pink);
-}
-
-.amount-preset:nth-child(4):hover, .amount-preset:nth-child(4).active {
-    background: rgba(255, 42, 109, 0.1);
-    box-shadow: 0 0 15px rgba(255, 42, 109, 0.5);
-}
-
+/* Удаляем цветные стили пресетов */
+.amount-preset:nth-child(1),
+.amount-preset:nth-child(2),
+.amount-preset:nth-child(3),
+.amount-preset:nth-child(4),
 .amount-preset:nth-child(5) {
-    border-color: var(--neon-yellow);
+    border-color: var(--neon-green);
 }
 
+.amount-preset:nth-child(1):hover, .amount-preset:nth-child(1).active,
+.amount-preset:nth-child(2):hover, .amount-preset:nth-child(2).active,
+.amount-preset:nth-child(3):hover, .amount-preset:nth-child(3).active,
+.amount-preset:nth-child(4):hover, .amount-preset:nth-child(4).active,
 .amount-preset:nth-child(5):hover, .amount-preset:nth-child(5).active {
-    background: rgba(255, 221, 0, 0.1);
-    box-shadow: 0 0 15px rgba(255, 221, 0, 0.5);
+    background: rgba(0, 255, 65, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
 }
 
 /* Media queries for responsive design */
@@ -383,17 +355,12 @@ body {
     border-color: rgba(0, 255, 65, 0.3);
 }
 
-/* Colored payment methods */
-.payment-option:has(input[value="card"]:checked) {
-    background: rgba(0, 179, 255, 0.1);
-    box-shadow: 0 0 15px rgba(0, 179, 255, 0.3);
-    border-color: var(--neon-blue);
-}
-
+/* Заменяем цветные стили методов оплаты */
+.payment-option:has(input[value="card"]:checked),
 .payment-option:has(input[value="sbp"]:checked) {
-    background: rgba(179, 111, 255, 0.1);
-    box-shadow: 0 0 15px rgba(179, 111, 255, 0.3);
-    border-color: var(--neon-purple);
+    background: rgba(0, 255, 65, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+    border-color: var(--neon-green);
 }
 
 .payment-option input[type="radio"] {
@@ -442,16 +409,16 @@ body {
 
 /* СБП стили */
 .payment-option input[value="sbp"]:checked + .payment-option-checkmark {
-    border-color: var(--neon-purple);
+    border-color: var(--neon-green);
 }
 
 .payment-option input[value="sbp"]:checked + .payment-option-checkmark:after {
-    background-color: var(--neon-purple);
-    box-shadow: 0 0 5px var(--neon-purple-glow);
+    background-color: var(--neon-green);
+    box-shadow: 0 0 5px var(--neon-green-glow);
 }
 
 .payment-option input[value="sbp"]:checked ~ .payment-option-label {
-    color: var(--neon-purple);
+    color: var(--neon-green);
 }
 
 .donate-btn {
@@ -500,16 +467,16 @@ body {
 
 /* СБП кнопка */
 .donate-btn.sbp-selected {
-    border-color: var(--neon-purple);
-    color: var(--neon-purple);
+    border-color: var(--neon-green);
+    color: var(--neon-green);
 }
 
 .donate-btn.sbp-selected .btn-glow {
-    background: var(--neon-purple);
+    background: var(--neon-green);
 }
 
 .donate-btn.sbp-selected:hover {
-    box-shadow: 0 0 15px var(--neon-purple-glow);
+    box-shadow: 0 0 15px var(--neon-green-glow);
 }
 
 .status-message {
@@ -587,8 +554,8 @@ body {
 /* Responsive adjustments */
 @media (max-width: 500px) {
     .wrapper {
-        width: 92%;
-        padding: 25px 20px;
+        width: 300px;
+        padding: 20px 15px;
         margin: 0 auto;
         max-height: 85vh;
         overflow-y: auto;
@@ -990,6 +957,10 @@ body {
     box-shadow: 0 0 10px rgba(153, 102, 255, 0.5);
 }
 
+#sbp:checked + label + .payment-option {
+    border-color: rgba(153, 102, 255, 0.5);
+}
+
 /* Кнопка пожертвования */
 .donate-button {
     margin-top: 20px;
@@ -1183,4 +1154,18 @@ body {
         flex-direction: column;
         gap: 5px;
     }
+}
+
+/* Отменяем стили цветной кнопки */
+.donate-btn.card-selected {
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+}
+
+.donate-btn.card-selected .btn-glow {
+    background: var(--neon-green);
+}
+
+.donate-btn.card-selected:hover {
+    box-shadow: 0 0 15px var(--neon-green-glow);
 } 
