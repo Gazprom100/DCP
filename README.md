@@ -24,10 +24,18 @@
 3. Подключите ваш репозиторий Git
 4. Укажите следующие настройки:
    - Build Command: `yarn install` или `npm install`
-   - Start Command: `yarn start` или `npm start`
+   - Start Command: `node server.js` (ВАЖНО: используйте именно эту команду, а не `yarn start` или `npm start`)
 5. Нажмите "Create Web Service"
 
 После деплоя на Render.com ваш сайт будет доступен по предоставленному URL.
+
+### Устранение проблем с деплоем на Render.com
+
+Если вы видите ошибку `Running 'node index.html'` в логах:
+1. Перейдите в настройки вашего сервиса на Render.com
+2. В разделе "Settings" найдите "Start Command"
+3. Измените значение на `node server.js`
+4. Сохраните изменения и выполните повторный деплой
 
 ## Как это работает
 
