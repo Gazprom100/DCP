@@ -13,18 +13,19 @@
 ## Установка
 
 1. Клонируйте этот репозиторий
-2. Откройте `index.html` в вашем браузере
-3. Или разместите файлы на любом хостинге статических веб-сайтов
+2. Установите зависимости: `npm install` или `yarn install`
+3. Запустите локальный сервер: `npm start` или `yarn start`
+4. Откройте браузер по адресу: `http://localhost:3000`
 
 ## Деплой на Render.com
 
 1. Зарегистрируйтесь на [Render.com](https://render.com)
-2. Создайте новый веб-сервис (Static Site)
+2. Создайте новый веб-сервис (Web Service, а не Static Site)
 3. Подключите ваш репозиторий Git
 4. Укажите следующие настройки:
-   - Build Command: `yarn`
-   - Start Command: `yarn start`
-5. Нажмите "Create Static Site"
+   - Build Command: `yarn install` или `npm install`
+   - Start Command: `yarn start` или `npm start`
+5. Нажмите "Create Web Service"
 
 После деплоя на Render.com ваш сайт будет доступен по предоставленному URL.
 
@@ -38,6 +39,7 @@
 ## Используемые технологии
 
 - HTML5, CSS3, Vanilla JavaScript
+- Express.js для обслуживания статических файлов
 - WATA Payment API для обработки платежей
 - Адаптивный дизайн с использованием современных функций CSS
 
