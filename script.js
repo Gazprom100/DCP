@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const donateBtn = document.getElementById('donate-btn');
     const amountInput = document.getElementById('amount');
     const statusMessage = document.getElementById('status-message');
+    const wrapper = document.querySelector('.wrapper');
     
-    // Создаем эффекты
-    createParticles();
-    createTechBackground();
+    // Инициализация эффектов
+    initInteractiveEffects();
     
     // Обработчики событий
     donateBtn.addEventListener('click', handleDonateClick);
@@ -78,101 +78,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Создать эффект частиц
-    function createParticles() {
-        const particlesContainer = document.querySelector('.particles');
-        const particleCount = 100;
-        
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            
-            // Случайная позиция
-            const posX = Math.random() * window.innerWidth;
-            const posY = Math.random() * window.innerHeight;
-            
-            // Случайный размер
-            const size = Math.random() * 3;
-            
-            // Случайная прозрачность
-            const opacity = Math.random() * 0.5 + 0.1;
-            
-            // Случайный цвет (от белого до зеленого)
-            const colorMix = Math.random();
-            const color = colorMix > 0.8 
-                ? 'rgba(0, 255, 65, ' + opacity + ')'
-                : 'rgba(255, 255, 255, ' + opacity + ')';
-            
-            // Установка стилей частицы
-            particle.style.left = posX + 'px';
-            particle.style.top = posY + 'px';
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.backgroundColor = color;
-            
-            // Добавляем анимацию
-            particle.style.animation = `pulse ${3 + Math.random() * 7}s infinite alternate`;
-            
-            // Добавляем частицу в контейнер
-            particlesContainer.appendChild(particle);
-        }
-    }
-    
-    // Создать технологичный фон
-    function createTechBackground() {
-        const matrixEffect = document.querySelector('.matrix-effect');
-        
-        // Создаем эффект сканирующей линии
-        const scanline = document.createElement('div');
-        scanline.style.position = 'absolute';
-        scanline.style.width = '100%';
-        scanline.style.height = '2px';
-        scanline.style.background = 'rgba(0, 255, 65, 0.2)';
-        scanline.style.boxShadow = '0 0 10px rgba(0, 255, 65, 0.5)';
-        scanline.style.zIndex = '2';
-        scanline.style.animation = 'scanline 4s linear infinite';
-        
-        document.querySelector('.animated-background').appendChild(scanline);
-        
-        // Случайные цифровые элементы
-        for (let i = 0; i < 20; i++) {
-            const digitalElement = document.createElement('div');
-            const size = Math.random() * 60 + 20;
-            const posX = Math.random() * window.innerWidth;
-            const posY = Math.random() * window.innerHeight;
-            const opacity = Math.random() * 0.1 + 0.05;
-            
-            digitalElement.style.position = 'absolute';
-            digitalElement.style.left = posX + 'px';
-            digitalElement.style.top = posY + 'px';
-            digitalElement.style.fontSize = size + 'px';
-            digitalElement.style.fontFamily = 'monospace';
-            digitalElement.style.color = `rgba(0, 255, 65, ${opacity})`;
-            digitalElement.style.zIndex = '1';
-            digitalElement.style.pointerEvents = 'none';
-            
-            const digit = Math.random() > 0.5 ? '0' : '1';
-            digitalElement.textContent = digit;
-            
-            // Добавляем анимацию мерцания
-            digitalElement.style.animation = `flicker ${2 + Math.random() * 3}s infinite`;
-            
-            document.querySelector('.animated-background').appendChild(digitalElement);
-        }
-    }
-    
-    // Добавление эффекта парения элементам интерфейса
-    function addFloatingEffect() {
-        const wrapper = document.querySelector('.wrapper');
-        
+    // Инициализация интерактивных эффектов
+    function initInteractiveEffects() {
+        // Эффект парения при движении мыши
         document.addEventListener('mousemove', (e) => {
             const mouseX = e.clientX / window.innerWidth - 0.5;
             const mouseY = e.clientY / window.innerHeight - 0.5;
             
             wrapper.style.transform = `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
         });
+        
+        // Добавляем отклик на кнопку при клике
+        donateBtn.addEventListener('mousedown', () => {
+            donateBtn.style.transform = 'scale(0.95)';
+        });
+        
+        donateBtn.addEventListener('mouseup', () => {
+            donateBtn.style.transform = 'scale(1)';
+        });
+        
+        donateBtn.addEventListener('mouseleave', () => {
+            donateBtn.style.transform = 'scale(1)';
+        });
     }
-    
-    // Инициализация эффекта парения
-    addFloatingEffect();
 });

@@ -21,60 +21,14 @@ body {
     width: 100vw;
 }
 
-/* Анимированный фон */
-.animated-background {
+/* Canvas background */
+#tech-background {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     z-index: 0;
-    background-color: #040b1a;
-    overflow: hidden;
-}
-
-.gradient-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(0, 30, 60, 0.4) 0%, rgba(4, 11, 26, 0.95) 70%);
-    z-index: 1;
-}
-
-.matrix-effect {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="100%" height="100%" fill="none"/><text x="50%" y="50%" font-family="monospace" font-size="10" fill="rgba(0, 255, 65, 0.05)" text-anchor="middle">01001010101110001010010101001010101010100101010010010100101</text></svg>') repeat;
-    opacity: 0.1;
-    animation: matrixScroll 30s linear infinite;
-    z-index: 1;
-}
-
-.grid-lines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: 40px 40px;
-    background-image: 
-        linear-gradient(to right, rgba(0, 255, 65, 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
-    z-index: 1;
-}
-
-@keyframes matrixScroll {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 0 1000px;
-    }
 }
 
 .container {
@@ -91,18 +45,30 @@ body {
     position: relative;
     width: 400px;
     padding: 40px;
-    background: var(--card-bg);
+    background: rgba(16, 20, 40, 0.5);
     border-radius: 16px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 255, 65, 0.2);
     z-index: 2;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 65, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: pulseBorder 4s infinite alternate;
+}
+
+@keyframes pulseBorder {
+    0% {
+        border-color: rgba(0, 255, 65, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 65, 0.1);
+    }
+    100% {
+        border-color: rgba(0, 255, 65, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 255, 65, 0.3);
+    }
 }
 
 .wrapper:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 255, 65, 0.2);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 255, 65, 0.4);
 }
 
 .glow-background {
@@ -130,12 +96,22 @@ body {
     font-weight: 700;
     letter-spacing: 2px;
     margin-bottom: 20px;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(0, 255, 65, 0.3);
+    animation: titleGlow 3s infinite alternate;
+}
+
+@keyframes titleGlow {
+    0% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 15px rgba(0, 255, 65, 0.2);
+    }
+    100% {
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.3), 0 0 25px rgba(0, 255, 65, 0.4), 0 0 35px rgba(0, 255, 65, 0.1);
+    }
 }
 
 .highlight {
     color: var(--neon-green);
-    text-shadow: 0 0 10px var(--neon-green-glow);
+    text-shadow: 0 0 10px var(--neon-green-glow), 0 0 20px var(--neon-green-glow);
 }
 
 .description {
@@ -260,19 +236,6 @@ body {
     z-index: 1;
 }
 
-.particles::before,
-.particles::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: radial-gradient(circle at center, transparent 0%, var(--background) 70%);
-    z-index: 2;
-    display: none;
-}
-
 .particle {
     position: absolute;
     width: 2px;
@@ -290,26 +253,6 @@ body {
     100% {
         opacity: 0.8;
         transform: translate(-50%, -50%) scale(1.3);
-    }
-}
-
-/* Добавляем эффект сканирования */
-@keyframes scanline {
-    0% {
-        transform: translateY(-100%);
-    }
-    100% {
-        transform: translateY(100%);
-    }
-}
-
-/* Добавляем эффект мерцания */
-@keyframes flicker {
-    0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
-        opacity: 0.99;
-    }
-    20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
-        opacity: 0.4;
     }
 }
 
