@@ -1,6 +1,8 @@
 :root {
     --neon-green: #00ff41;
     --neon-green-glow: rgba(0, 255, 65, 0.6);
+    --neon-purple: #b36fff;
+    --neon-purple-glow: rgba(179, 111, 255, 0.6);
     --background: #050a18;
     --card-bg: rgba(16, 20, 40, 0.7);
     --text-color: #e0e0e0;
@@ -121,7 +123,7 @@ body {
 }
 
 .amount-container {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .amount-input-wrapper {
@@ -133,6 +135,7 @@ body {
     padding: 8px 16px;
     position: relative;
     transition: all 0.3s ease;
+    margin-bottom: 15px;
 }
 
 .amount-input-wrapper:hover {
@@ -161,6 +164,170 @@ body {
 .currency {
     font-size: 1.5rem;
     opacity: 0.7;
+}
+
+/* Amount Presets */
+.amount-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+}
+
+.amount-preset {
+    padding: 8px 15px;
+    background: rgba(16, 20, 40, 0.5);
+    border: 1px solid var(--neon-green);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.amount-preset:hover {
+    background: rgba(16, 20, 40, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+    border-color: var(--neon-green);
+}
+
+.amount-preset.active {
+    background: rgba(0, 255, 65, 0.1);
+    color: var(--neon-green);
+    font-weight: 500;
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+}
+
+.amount-preset.active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+    animation: shine 1.5s infinite;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 480px) {
+    .amount-presets {
+        gap: 8px;
+    }
+    
+    .amount-preset {
+        padding: 6px 12px;
+        font-size: 14px;
+        min-width: 50px;
+    }
+}
+
+/* Payment methods */
+.payment-methods {
+    margin-bottom: 20px;
+}
+
+.payment-method-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    opacity: 0.8;
+    text-align: center;
+}
+
+.payment-method-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 255, 65, 0.3);
+}
+
+.payment-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.payment-option-checkmark {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.payment-option input[type="radio"]:checked + .payment-option-checkmark {
+    border-color: var(--neon-green);
+}
+
+.payment-option input[type="radio"]:checked + .payment-option-checkmark:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--neon-green);
+    box-shadow: 0 0 5px var(--neon-green-glow);
+}
+
+.payment-option-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.payment-option input[type="radio"]:checked ~ .payment-option-label {
+    color: var(--neon-green);
+}
+
+/* СБП стили */
+.payment-option input[value="sbp"]:checked + .payment-option-checkmark {
+    border-color: var(--neon-purple);
+}
+
+.payment-option input[value="sbp"]:checked + .payment-option-checkmark:after {
+    background-color: var(--neon-purple);
+    box-shadow: 0 0 5px var(--neon-purple-glow);
+}
+
+.payment-option input[value="sbp"]:checked ~ .payment-option-label {
+    color: var(--neon-purple);
 }
 
 .donate-btn {
@@ -204,6 +371,20 @@ body {
 
 .donate-btn:hover .btn-glow {
     transform: translateX(0);
+}
+
+/* СБП кнопка */
+.donate-btn.sbp-selected {
+    border-color: var(--neon-purple);
+    color: var(--neon-purple);
+}
+
+.donate-btn.sbp-selected .btn-glow {
+    background: var(--neon-purple);
+}
+
+.donate-btn.sbp-selected:hover {
+    box-shadow: 0 0 15px var(--neon-purple-glow);
 }
 
 .status-message {
@@ -275,6 +456,23 @@ body {
     .currency {
         font-size: 1.2rem;
     }
+    
+    .amount-presets {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .amount-preset {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+    
+    .payment-method-options {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
 }
 
 /* Loading animation */
@@ -339,5 +537,444 @@ body {
     }
     100% {
         transform: scale(0);
+    }
+}
+
+/* Основные стили */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+    background-color: #000;
+    color: #fff;
+}
+
+/* Фон из canvas */
+#tech-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Основной контейнер */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+    padding: 20px;
+    transition: transform 0.2s ease;
+    perspective: 1000px;
+}
+
+/* Карточка пожертвования */
+.donation-card {
+    background: rgba(0, 5, 20, 0.7);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 162, 255, 0.3),
+                0 0 60px rgba(0, 162, 255, 0.1);
+    border: 1px solid rgba(0, 162, 255, 0.5);
+    animation: pulse 4s infinite alternate;
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transition: all 0.3s ease;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 20px rgba(0, 162, 255, 0.3),
+                    0 0 60px rgba(0, 162, 255, 0.1);
+    }
+    100% {
+        box-shadow: 0 0 25px rgba(0, 162, 255, 0.5),
+                    0 0 70px rgba(0, 162, 255, 0.2);
+    }
+}
+
+.heading {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.heading h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 162, 255, 0.5),
+                 0 0 20px rgba(0, 162, 255, 0.3);
+}
+
+.heading p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+/* Форма пожертвования */
+.donation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Поле ввода суммы */
+.amount-container {
+    position: relative;
+}
+
+.amount-container label {
+    display: block;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+.amount-input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(0, 10, 30, 0.6);
+    border: 1px solid rgba(0, 162, 255, 0.3);
+    color: #fff;
+    font-size: 1.2rem;
+    text-align: center;
+    transition: all 0.3s;
+    outline: none;
+}
+
+.amount-input:focus {
+    border-color: rgba(0, 162, 255, 0.8);
+    box-shadow: 0 0 15px rgba(0, 162, 255, 0.4);
+}
+
+.currency {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+.pulse-animation {
+    animation: input-pulse 0.5s ease;
+}
+
+@keyframes input-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Методы оплаты */
+.payment-methods {
+    background: rgba(0, 15, 40, 0.6);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 5px;
+    border: 1px solid rgba(0, 162, 255, 0.2);
+}
+
+.payment-methods h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+}
+
+.payment-options {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.payment-option {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(0, 20, 50, 0.5);
+    border: 1px solid transparent;
+}
+
+.payment-option:hover {
+    background: rgba(0, 40, 80, 0.5);
+}
+
+.payment-option input {
+    display: none;
+}
+
+.payment-option input:checked + label {
+    color: #00a2ff;
+    text-shadow: 0 0 5px rgba(0, 162, 255, 0.5);
+}
+
+.payment-option input:checked + label .checkmark {
+    background: #00a2ff;
+    box-shadow: 0 0 10px rgba(0, 162, 255, 0.5);
+}
+
+.payment-option input:checked + label + .payment-option {
+    border-color: rgba(0, 162, 255, 0.5);
+}
+
+.payment-option label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 500;
+    gap: 10px;
+}
+
+.payment-option .checkmark {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    transition: all 0.2s;
+}
+
+.payment-option input:checked + label .checkmark:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+/* Стили для СБП */
+.payment-option[for="sbp"] {
+    background: rgba(16, 16, 60, 0.5);
+}
+
+.payment-option[for="sbp"]:hover {
+    background: rgba(32, 32, 100, 0.5);
+}
+
+#sbp:checked + label {
+    color: #9966ff;
+    text-shadow: 0 0 5px rgba(153, 102, 255, 0.5);
+}
+
+#sbp:checked + label .checkmark {
+    background: #9966ff;
+    box-shadow: 0 0 10px rgba(153, 102, 255, 0.5);
+}
+
+/* Кнопка пожертвования */
+.donate-button {
+    margin-top: 20px;
+    width: 100%;
+}
+
+#donate-btn {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #0058a2, #00a2ff);
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    outline: none;
+    box-shadow: 0 0 15px rgba(0, 162, 255, 0.5);
+    letter-spacing: 1px;
+}
+
+#donate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 162, 255, 0.7);
+    background: linear-gradient(45deg, #006bc5, #00b2ff);
+}
+
+#donate-btn:active {
+    transform: translateY(1px);
+}
+
+#donate-btn:before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    transition: all 0.5s;
+    opacity: 0;
+}
+
+#donate-btn:hover:before {
+    opacity: 1;
+    animation: shine 1.5s infinite;
+}
+
+/* Анимация для кнопки */
+@keyframes shine {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    20% {
+        left: 100%;
+        opacity: 0.3;
+    }
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
+/* Стиль кнопки для СБП */
+#donate-btn.sbp-selected {
+    background: linear-gradient(45deg, #6530c9, #9966ff);
+    box-shadow: 0 0 15px rgba(153, 102, 255, 0.5);
+}
+
+#donate-btn.sbp-selected:hover {
+    background: linear-gradient(45deg, #7540e0, #a870ff);
+    box-shadow: 0 0 20px rgba(153, 102, 255, 0.7);
+}
+
+/* Сообщение о статусе */
+.status-message {
+    background: rgba(0, 20, 50, 0.7);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s;
+    border: 1px solid rgba(0, 162, 255, 0.3);
+    display: none;
+}
+
+.status-message.show {
+    opacity: 1;
+    transform: translateY(0);
+    display: block;
+}
+
+.status-message.error {
+    border-color: rgba(255, 80, 80, 0.6);
+    background: rgba(50, 10, 10, 0.7);
+    color: #ff5050;
+}
+
+.status-message.success {
+    border-color: rgba(80, 255, 80, 0.6);
+    background: rgba(10, 50, 10, 0.7);
+    color: #50ff50;
+}
+
+/* Анимация загрузки */
+.loading {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.loading div {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00a2ff;
+    animation: loading 1.4s infinite ease-in-out both;
+}
+
+.loading div:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.loading div:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+.loading div:nth-child(3) {
+    animation-delay: 0s;
+}
+
+.loading div:nth-child(4) {
+    animation-delay: 0.16s;
+}
+
+@keyframes loading {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+/* Адаптивность */
+@media screen and (max-width: 580px) {
+    .donation-card {
+        padding: 20px;
+    }
+    
+    .heading h1 {
+        font-size: 2rem;
+    }
+    
+    .amount-input {
+        padding: 12px;
+    }
+    
+    #donate-btn {
+        padding: 12px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .donation-card {
+        padding: 15px;
+    }
+    
+    .heading h1 {
+        font-size: 1.8rem;
+    }
+    
+    .amount-input {
+        padding: 10px;
+        font-size: 1rem;
+    }
+    
+    #donate-btn {
+        padding: 10px;
+        font-size: 1rem;
+    }
+    
+    .payment-options {
+        flex-direction: column;
+        gap: 5px;
     }
 } 
