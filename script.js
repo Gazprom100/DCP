@@ -53,6 +53,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
     
+    // Обработка изменения метода оплаты и обновление цвета кнопки
+    paymentMethodRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            const method = getSelectedPaymentMethod();
+            updateDonateButtonStyle(method);
+        });
+    });
+    
+    // Инициализация начального состояния кнопки
+    updateDonateButtonStyle(getSelectedPaymentMethod());
+    
+    // Обновление стиля кнопки в зависимости от выбранного метода оплаты
+    function updateDonateButtonStyle(method) {
+        if (method === 'sbp') {
+            donateBtn.classList.add('sbp-selected');
+            donateBtn.classList.remove('card-selected');
+        } else {
+            donateBtn.classList.add('card-selected');
+            donateBtn.classList.remove('sbp-selected');
+        }
+    }
+    
     // Получение выбранного метода оплаты
     function getSelectedPaymentMethod() {
         for (const radio of paymentMethodRadios) {
@@ -187,18 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         donateBtn.addEventListener('mouseleave', () => {
             donateBtn.style.transform = 'scale(1)';
-        });
-        
-        // Добавляем анимацию при смене метода оплаты
-        paymentMethodRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                const method = getSelectedPaymentMethod();
-                if (method === 'sbp') {
-                    donateBtn.classList.add('sbp-selected');
-                } else {
-                    donateBtn.classList.remove('sbp-selected');
-                }
-            });
         });
     }
 });

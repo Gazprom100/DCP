@@ -4,6 +4,14 @@
     --neon-green-faint: rgba(0, 255, 65, 0.1);
     --neon-purple: #b36fff;
     --neon-purple-glow: rgba(179, 111, 255, 0.6);
+    --neon-blue: #00b3ff;
+    --neon-blue-glow: rgba(0, 179, 255, 0.6);
+    --neon-orange: #ff9d00;
+    --neon-orange-glow: rgba(255, 157, 0, 0.6);
+    --neon-pink: #ff2a6d;
+    --neon-pink-glow: rgba(255, 42, 109, 0.6);
+    --neon-yellow: #ffdd00;
+    --neon-yellow-glow: rgba(255, 221, 0, 0.6);
     --background: #050a18;
     --card-bg: rgba(16, 20, 40, 0.7);
     --text-color: #e0e0e0;
@@ -45,13 +53,16 @@ body {
 }
 
 .container {
-    height: 100vh;
-    width: 100vw;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    min-height: 100vh;
     position: relative;
-    z-index: 10;
+    z-index: 1;
+    padding: 20px;
+    max-height: 100%;
+    overflow-y: auto;
 }
 
 .wrapper {
@@ -67,6 +78,7 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 65, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     animation: pulseBorder 4s infinite alternate;
+    max-height: 90vh;
 }
 
 @keyframes pulseBorder {
@@ -137,6 +149,7 @@ body {
     position: relative;
     z-index: 3;
     text-align: center;
+    max-height: 100%;
 }
 
 .title {
@@ -242,38 +255,56 @@ body {
     overflow: hidden;
 }
 
-.amount-preset:hover {
-    background: rgba(16, 20, 40, 0.7);
-    transform: translateY(-2px);
-    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
-    border-color: var(--neon-green);
-}
-
-.amount-preset.active {
+.amount-preset:hover, .amount-preset.active {
     background: rgba(0, 255, 65, 0.1);
-    color: var(--neon-green);
-    font-weight: 500;
     box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+    transform: translateY(-2px);
 }
 
-.amount-preset.active::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent, rgba(0, 255, 65, 0.1), transparent);
-    animation: shine 1.5s infinite;
+/* Colored amount presets */
+.amount-preset:nth-child(1) {
+    border-color: var(--neon-blue);
 }
 
-@keyframes shine {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(100%);
-    }
+.amount-preset:nth-child(1):hover, .amount-preset:nth-child(1).active {
+    background: rgba(0, 179, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 179, 255, 0.5);
+}
+
+.amount-preset:nth-child(2) {
+    border-color: var(--neon-purple);
+}
+
+.amount-preset:nth-child(2):hover, .amount-preset:nth-child(2).active {
+    background: rgba(179, 111, 255, 0.1);
+    box-shadow: 0 0 15px rgba(179, 111, 255, 0.5);
+}
+
+.amount-preset:nth-child(3) {
+    border-color: var(--neon-orange);
+}
+
+.amount-preset:nth-child(3):hover, .amount-preset:nth-child(3).active {
+    background: rgba(255, 157, 0, 0.1);
+    box-shadow: 0 0 15px rgba(255, 157, 0, 0.5);
+}
+
+.amount-preset:nth-child(4) {
+    border-color: var(--neon-pink);
+}
+
+.amount-preset:nth-child(4):hover, .amount-preset:nth-child(4).active {
+    background: rgba(255, 42, 109, 0.1);
+    box-shadow: 0 0 15px rgba(255, 42, 109, 0.5);
+}
+
+.amount-preset:nth-child(5) {
+    border-color: var(--neon-yellow);
+}
+
+.amount-preset:nth-child(5):hover, .amount-preset:nth-child(5).active {
+    background: rgba(255, 221, 0, 0.1);
+    box-shadow: 0 0 15px rgba(255, 221, 0, 0.5);
 }
 
 /* Media queries for responsive design */
@@ -321,7 +352,19 @@ body {
 
 .payment-option:hover {
     background: rgba(0, 0, 0, 0.3);
-    border-color: rgba(0, 255, 65, 0.3);
+}
+
+/* Colored payment methods */
+.payment-option:has(input[value="card"]:checked) {
+    background: rgba(0, 179, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 179, 255, 0.3);
+    border-color: var(--neon-blue);
+}
+
+.payment-option:has(input[value="sbp"]:checked) {
+    background: rgba(179, 111, 255, 0.1);
+    box-shadow: 0 0 15px rgba(179, 111, 255, 0.3);
+    border-color: var(--neon-purple);
 }
 
 .payment-option input[type="radio"] {
@@ -399,45 +442,30 @@ body {
     margin-top: 5px;
 }
 
-.donate-btn .btn-text {
-    position: relative;
-    z-index: 2;
-    transition: all 0.3s ease;
-}
-
-.donate-btn .btn-glow {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--neon-green);
-    transform: translateX(-100%);
-    transition: all 0.3s ease;
-    z-index: 1;
-}
-
 .donate-btn:hover {
-    color: var(--background);
-    box-shadow: 0 0 15px var(--neon-green-glow);
+    background: rgba(0, 255, 65, 0.1);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+    transform: translateY(-2px);
 }
 
-.donate-btn:hover .btn-glow {
-    transform: translateX(0);
+.donate-btn.card-selected {
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
 }
 
-/* СБП кнопка */
+.donate-btn.card-selected:hover {
+    background: rgba(0, 179, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 179, 255, 0.5);
+}
+
 .donate-btn.sbp-selected {
     border-color: var(--neon-purple);
     color: var(--neon-purple);
 }
 
-.donate-btn.sbp-selected .btn-glow {
-    background: var(--neon-purple);
-}
-
 .donate-btn.sbp-selected:hover {
-    box-shadow: 0 0 15px var(--neon-purple-glow);
+    background: rgba(179, 111, 255, 0.1);
+    box-shadow: 0 0 20px rgba(179, 111, 255, 0.5);
 }
 
 .status-message {
@@ -517,6 +545,13 @@ body {
     .wrapper {
         width: 92%;
         padding: 25px 20px;
+        margin: 0 auto;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+    
+    .content {
+        max-height: 100%;
     }
     
     .title {
